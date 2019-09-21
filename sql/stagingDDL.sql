@@ -21,8 +21,8 @@ CREATE TABLE ST_AURN_STATIONS_META(
 
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2013;
 CREATE TABLE ST_AURN_MEASURES_2013(
-id varchar(10),
-measure_date  DATE,
+id varchar(15),
+measure_date varchar(30),
 code varchar(5),
 site varchar(40),
 no2 varchar(10),
@@ -78,7 +78,7 @@ noctane varchar(10),
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2014;
 CREATE TABLE ST_AURN_MEASURES_2014(
 id varchar(10),
-measure_date  DATE,
+measure_date  varchar(30),
 code 	varchar(5),
 site 	varchar(40),
 no2 	varchar(10),	
@@ -134,7 +134,7 @@ noctane		varchar(10),
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2015;
 CREATE TABLE ST_AURN_MEASURES_2015(
 id varchar(10),
-measure_date  DATE,
+measure_date  varchar(30),
 code varchar(5),
 site varchar(40),
 no2 varchar(10),	
@@ -190,7 +190,7 @@ noctane	 varchar(10),
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2016;
 CREATE TABLE ST_AURN_MEASURES_2016 (
 id varchar(10),
-measure_date date DEFAULT NULL,
+measure_date varchar(30),
   code varchar(10) DEFAULT NULL,
   site varchar(40) DEFAULT NULL,
 no2 varchar(10) DEFAULT NULL,
@@ -250,7 +250,7 @@ no2 varchar(10) DEFAULT NULL,
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2017;
 CREATE TABLE ST_AURN_MEASURES_2017 (
 id varchar(10),
-measure_date date DEFAULT NULL,
+measure_date varchar(30),
 code varchar(10) DEFAULT NULL,
 site varchar(40) DEFAULT NULL,
 no2 varchar(10),	
@@ -309,7 +309,7 @@ noctane	varchar(10),
 DROP TABLE IF EXISTS ST_AURN_MEASURES_2018;
 CREATE TABLE ST_AURN_MEASURES_2018(
 id varchar(10),
-measure_date  DATE,
+measure_date  varchar(30),
 code varchar(5),
 site varchar(40),
 no2	varchar(10),
@@ -364,4 +364,16 @@ ioctane	varchar(10),
 noctane		varchar(10),
 123tmb	varchar(10)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS ST_AURN_NO2_MEASURES;
+CREATE TABLE ST_AURN_NO2_MEASURES(
+id varchar(10),
+date_time datetime,
+no2 varchar(50),
+ws varchar(50),
+wd varchar(50),
+temp varchar(50)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 

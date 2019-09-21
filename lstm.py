@@ -10,7 +10,7 @@ from keras.layers import Dense
 #-----------
 # Loading dataset
 #-----------
-df = pd.read_csv('/home/gloria/Greenwich/Term3/datasets/no2Hourly.csv')
+df = pd.read_csv('data/no2Hourly.csv')
 print(df.head())
 
 # Taking the variables of interest
@@ -31,7 +31,7 @@ uni_data = (uni_data - data_mean)/data_std
 # Samples:770 (dataset training/Timesteps)
 # Timesteps:48 (Number of hours to check)
 # Featues: 1 (Variables to observe, in this case just 1 (No2))
-def super_stupid_gloria(data, start_index, end_index, timesteps):
+def get_data_shaped(data, start_index, end_index, timesteps):
     samples = list()
     labels = list()
 
@@ -67,16 +67,16 @@ UNITS = 110
 INPUTS = BATCH * UNITS
 
 model = Sequential()
-model.add(LSTM(50, activation='relu', batch_input_shape=(None, 32, 1), return_sequences=True))
+model.add(LSTM(24, activation='relu', batch_input_shape=(None, 48, 1), return_sequences=True))
 model.add(Dense(1))
 model.summary()
 model.compile(optimizer='adam', loss='mse')
 
-x_train, y_train = super_stupid_gloria(uni_data, 0, 36960, 32)
-x_test, y_test = super_stupid_gloria(uni_data, 36961, 52561, 32)
+x_train, y_train = get_data_shaped(uni_data, 0, 36960, 48)
+x_test, y_test = get_data_shaped(uni_data, 36961, 52561, 48)
 
 # fit model
-model.fit(x_train, y_train, epochs=20, verbose=0)
+model.fit(x_train, y_train, epochs=10,  verbose=0)
 
 yhat = model.predict(x_test, verbose=0)
 print(x_test)
