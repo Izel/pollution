@@ -6,78 +6,30 @@ import pandas as pd
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
+import datetime as dt
+
+#-----------
+# formatting dataset date
+#-----------
+def format_date(date):
+    date_spl = date.split(sep='-')
+    hour = date_spl[-1] + ':00:00'
+    full_date_time = '-'.join(date_spl[0:-1]) + ' ' + hour
+    return full_date_time
 
 #-----------
 # Loading dataset
 #-----------
+def format_dataset(df):
+    df['date'] = df.apply(lambda x: format_date(x.get(key='date')),axis=1)
+    df['month'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).month, axis=1)
+    df['day_of_month'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).day, axis=1)
+    df['day_of_week'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).weekday(), axis=1)
+    df = df.drop(df.columns[0], axis=1)
+    df = df.drop(["wd", "ws", "temp"], axis=1)
+    df.rename(columns={"date": "datetime"}, inplace=True)
+    export_csv = df.to_csv (r'data/no2London-Dataset.csv', index = None, header=True)
+
 df = pd.read_csv('data/no2Hourly.csv')
-print(df.head())
-
-# Taking the variables of interest
-uni_data = df['no2']
-uni_data.index = df['date']
-
-print(uni_data.head())
-
-# Dataset normalization
-print('Dataset size: ' + str(len(uni_data)))
-data_mean = uni_data[:len(uni_data)].mean()
-#print('Mean: ' + str(data_mean))
-data_std = uni_data[:len(uni_data)].std()
-#print('Std: ' + str(data_std))
-uni_data = (uni_data - data_mean)/data_std
-
-
-# Samples:770 (dataset training/Timesteps)
-# Timesteps:48 (Number of hours to check)
-# Featues: 1 (Variables to observe, in this case just 1 (No2))
-def get_data_shaped(data, start_index, end_index, timesteps):
-    samples = list()
-    labels = list()
-
-    for i in range(start_index, end_index, timesteps):
-        # grab from i to i + timesteps
-        _sample = data[i:i+timesteps]
-        _label = data[i:i+timesteps]
-        samples.append(_sample)
-        labels.append(_label)
-
-    print('Size of samples: ' + str(len(samples)))
-    print('Size of labels : ' + str(len(labels)))
-
-    data_to_train = np.array(samples)
-    data_labels = np.array(labels)
-
-    print('Shape of samples: ' + str(data_to_train.shape))
-    print('Size of labels : ' + str(data_labels.shape))
-
-    # Reshaping the data into [samples, timesteps, features]
-    data_to_train = data_to_train.reshape(len(samples), timesteps, 1)
-    data_labels = data_labels.reshape(len(labels), timesteps, 1)
-
-    print('Reshaped data_to_train: ' + str(data_to_train.shape))
-
-    return data_to_train, data_labels
-
-# With 770 samples, lets define a batch size not too big. 7 is a good number
-# because de division of 770/7 gives an integer that is not too small (higher than 50)
-# and not too high (over 400)
-BATCH = 7
-UNITS = 110
-INPUTS = BATCH * UNITS
-
-model = Sequential()
-model.add(LSTM(24, activation='relu', batch_input_shape=(None, 48, 1), return_sequences=True))
-model.add(Dense(1))
-model.summary()
-model.compile(optimizer='adam', loss='mse')
-
-x_train, y_train = get_data_shaped(uni_data, 0, 36960, 48)
-x_test, y_test = get_data_shaped(uni_data, 36961, 52561, 48)
-
-# fit model
-model.fit(x_train, y_train, epochs=10,  verbose=0)
-
-yhat = model.predict(x_test, verbose=0)
-print(x_test)
-print(yhat)
+format_dataset(df)
+print(df.shape)
