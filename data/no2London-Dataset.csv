@@ -1,4 +1,4 @@
-datetime,no2,month,day_of_month,day_of_week
+datetime,no2,month,dayofmonth,dayofweek
 2013-01-01 00:00:00,27.2744825,1,1,1
 2013-01-01 01:00:00,30.504979285714303,1,1,1
 2013-01-01 02:00:00,20.477477857142897,1,1,1

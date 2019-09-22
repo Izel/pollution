@@ -23,13 +23,14 @@ def format_date(date):
 def format_dataset(df):
     df['date'] = df.apply(lambda x: format_date(x.get(key='date')),axis=1)
     df['month'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).month, axis=1)
-    df['day_of_month'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).day, axis=1)
-    df['day_of_week'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).weekday(), axis=1)
-    df = df.drop(df.columns[0], axis=1)
-    df = df.drop(["wd", "ws", "temp"], axis=1)
+    df['dayofmonth'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).day, axis=1)
+    df['dayofweek'] = df.apply(lambda x: pd.Timestamp(x.get(key='date')).weekday(), axis=1)
+    df.drop(df.columns[0], axis=1, inplace=True)
+    df.drop(["wd", "ws", "temp"], axis=1,inplace=True)
     df.rename(columns={"date": "datetime"}, inplace=True)
     export_csv = df.to_csv (r'data/no2London-Dataset.csv', index = None, header=True)
 
 df = pd.read_csv('data/no2Hourly.csv')
 format_dataset(df)
 print(df.shape)
+print(df.columns)
